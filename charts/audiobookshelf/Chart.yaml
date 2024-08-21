@@ -1,0 +1,18 @@
+apiVersion: v2
+name: audiobookshelf
+description: A Helm chart for Audiobookshelf
+type: application
+version: 0.1.0
+appVersion: "2.12.2"
+home: https://github.com/landonc/helm-charts
+keywords:
+  - audiobookshelf
+source:  
+  - https://github.com/advplyr/audiobookshelf
+repo:
+  - https://github.com/landonc/helm-charts.git
+icon: https://www.audiobookshelf.org/Logo.png
+maintainer:
+  - Landon Chelf <landon.chelf@gmail.com>
+details:
+  Some details here
