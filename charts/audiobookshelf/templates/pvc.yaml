@@ -14,8 +14,9 @@ metadata:
 {{- end }}
 spec:
   capacity:
-    storage: {{ $persistence.capacity }}
-  accessModes: {{ toYaml $persistence.accessModes | nindent 4 }}
+    storage: {{ $persistence.size }}
+  accessModes: 
+    - - {{ $persistence.accessMode | quote }}
 {{- if $persistence.storageClass }}
 {{- if (eq "-" $persistence.storageClass) }}
   storageClassName: ""
