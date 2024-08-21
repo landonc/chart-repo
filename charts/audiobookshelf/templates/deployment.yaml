@@ -63,8 +63,8 @@ spec:
         {{- $persistence := . }}
         - name: {{ $persistence.name }}
         {{- if $persistence.enabled }}        
-          persistentVolumeClaim:
-            claimName: {{ $persistence.existingClaim | default (printf "%s-config" (include "audiobookshelf.fullname" .)) }}
+          persistentVolumeClaim:          
+            claimName: {{ $persistence.existingClaim | default (include "audiobookshelf.fullname" $ )-$persistence.name }}
         {{- else }}
           emptyDir: {}
         {{- end }}        
