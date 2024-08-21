@@ -16,7 +16,7 @@ spec:
   capacity:
     storage: {{ $persistence.size }}
   accessModes: 
-    - - {{ $persistence.accessMode | quote }}
+    - {{ $persistence.accessMode | quote }}
 {{- if $persistence.storageClass }}
 {{- if (eq "-" $persistence.storageClass) }}
   storageClassName: ""
