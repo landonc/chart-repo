@@ -12,8 +12,7 @@ metadata:
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
-spec:
-  volumename: {{ include "audiobookshelf.fullname" $ }}-{{ $persistence.name }}-pv
+spec:  
   accessModes:
     - {{ $persistence.accessMode | quote }}
   resources:
