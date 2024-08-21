@@ -2,31 +2,6 @@
 {{- $persistence := . }}
 {{- if and $persistence.enabled (not $persistence.existingClaim) }}
 apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: {{ include "audiobookshelf.fullname" $ }}-{{ $persistence.name }}-pv  
-  namespace: {{ $.Release.Namespace }}
-  labels:
-    {{- include "audiobookshelf.labels" $ | nindent 4 }}
-{{- with $persistence.annotations  }}
-  annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
-spec:
-  capacity:
-    storage: {{ $persistence.size }}
-  accessModes: 
-    - {{ $persistence.accessMode | quote }}
-{{- if $persistence.storageClass }}
-{{- if (eq "-" $persistence.storageClass) }}
-  storageClassName: ""
-{{- else }}
-  storageClassName: "{{ $persistence.storageClass }}"
-{{- end }}
-{{- end }} 
-  persistentVolumeReclaimPolicy: Retain 
----
-apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ include "audiobookshelf.fullname" $ }}-{{ $persistence.name }}
