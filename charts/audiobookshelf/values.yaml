@@ -1,14 +1,55 @@
 # Default values for audiobookshelf.
 # This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
 
 image:
   repository: ghcr.io/advplyr/audiobookshelf
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
+
+timezone: "UTC"
+
+persistence:
+  # Required to not be store over NFS mount due to sqlite database corruption issues
+  - name: config    
+    enabled: true
+    type: pvc
+    size: 1Gi
+    annotations: {}    
+    mountPath: /config
+    finalizers:
+      - kubernetes.io/pvc-protection
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  # Can be stored on NFS but for speed we've defaulted to kubernetes default volume claim service
+  - name: metadata
+    enabled: true
+    type: pvc
+    size: 10Gi
+    annotations: {}
+    mountPath: /metadata
+    finalizers:
+      - kubernetes.io/pvc-protection
+    storageClass: ""
+    accessMode: ReadWriteOnce
+  # Connect to a NFS server and mount one or more shares where you might have larger storage
+  # this is an ephemeral connection vs a kubernetes persistent volume and claim
+  - name: nfs # this can be anything, it's not used for the config but left for consistency in structure
+    type: nfs
+    enabled: false
+    annotations: {}  
+    server: 192.168.0.10
+    shares:
+      - name: audiobooks # name for the volume        
+        path: /mnt/audiobooks # the exported directory/path
+        mountPath: /audiobooks # path to mount to in the container
+        readOnly: false
+
+###
+# Below is the default helm chart values. Do NOT modify unless you know what you're doing
+###
+
+replicaCount: 1
 
 imagePullSecrets: []
 nameOverride: ""
@@ -106,37 +147,5 @@ tolerations: []
 
 affinity: {}
 
-persistentVolumeClaims: []
-  # Example persistent volume claim for the /audiobooks mount
-  #   # The name of the pvc
-  # - name: audiobooks
-  #   # The path to mount the pvc in the audiobookshelf container
-  #   mountPath: /audiobooks
-  #   # Set the pvc to read-only
-  #   readOnly: true
-  
-persistence:
-  - name: config
-    enabled: true
-    size: 1Gi
-    storageClass: ""
-    annotations: {}
-    accessMode: ReadWriteOnce
-    existingClaim: ""
-  - name: metadata
-    enabled: true
-    size: 10Gi
-    storageClass: ""
-    annotations: {}
-    accessMode: ReadWriteOnce
-    existingClaim: ""
-  # Additional example claim if you want audiobooks stored in kubernets instead of on NFS
-  # - name: audiobooks
-  #   enabled: true
-  #   size: 20Gi
-  #   storageClass: ""
-  #   annotations: {}
-  #   accessMode: ReadWriteOnce
-  #   existingClaim: ""
+persistentVolumeClaims: []  
 
-timezone: "UTC"

@@ -50,10 +50,26 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: config
-              mountPath: /config
-            - name: metadata
-              mountPath: /metadata          
+            {{- $has_vols := false }}
+            {{- range .Values.persistence }}        
+            {{- if and .enabled}}
+            {{- $has_vols = true }}
+            {{- if eq "pvc" .type }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+            {{- if eq "nfs" .type }}
+            {{- range .shares }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+            {{- end }}
+            {{- end }}
+            {{- end }}        
+            {{- end }}
+            {{- if eq $has_vols false }}
+              []
+            {{- end }}  
+                     
           {{- range .Values.persistentVolumeClaims }}
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
@@ -62,16 +78,26 @@ spec:
           {{- with .Values.volumeMounts }}
             {{- toYaml . | nindent 12 }}
           {{- end }}      
-      volumes:       
+      volumes:
+        {{- if $has_vols }}        
         {{- range .Values.persistence }}
-        {{- $persistence := . }}
-        - name: {{ $persistence.name }}
-        {{- if $persistence.enabled }}        
+        {{- if and .enabled (eq "pvc" .type)}}
+        - name: {{ .name }}          
           persistentVolumeClaim:          
-            claimName: {{ $persistence.existingClaim | default (printf "%s-%s" (include "audiobookshelf.fullname" $ ) $persistence.name) }}
+            claimName: {{ .existingClaim | default (printf "%s-%s" (include "audiobookshelf.fullname" $ ) .name) }}
+        {{- end }}
+        {{- if and .enabled (eq "nfs" .type)}}
+        {{ $nfsServer := .server }}
+        {{- range .shares}}
+        - name: {{ .name }}          
+          nfs:
+            server: {{ $nfsServer }}
+            path: {{ .path }}
+        {{- end }}
+        {{- end }}
+        {{- end }}
         {{- else }}
-          emptyDir: {}
-        {{- end }}        
+        []        
         {{- end }}
         {{- with .Values.volumes }}
           {{- toYaml . | nindent 8 }}

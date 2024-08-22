@@ -1,28 +1,27 @@
 {{- range .Values.persistence }}
-{{- $persistence := . }}
-{{- if and $persistence.enabled (not $persistence.existingClaim) }}
+{{- if and .enabled (not .existingClaim) (eq "pvc" .type)}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "audiobookshelf.fullname" $ }}-{{ $persistence.name }}
+  name: {{ include "audiobookshelf.fullname" $ }}-{{ .name }}
   namespace: {{ $.Release.Namespace }}
   labels:
     {{- include "audiobookshelf.labels" $ | nindent 4 }}
-{{- with $persistence.annotations  }}
+{{- with .annotations  }}
   annotations:
 {{ toYaml . | indent 4 }}
 {{- end }}
 spec:  
   accessModes:
-    - {{ $persistence.accessMode | quote }}
+    - {{ .accessMode | quote }}
   resources:
     requests:
-      storage: {{ $persistence.size }}
-{{- if $persistence.storageClass }}
-{{- if (eq "-" $persistence.storageClass) }}
+      storage: {{ .size }}
+{{- if .storageClass }}
+{{- if (eq "-" .storageClass) }}
   storageClassName: ""
 {{- else }}
-  storageClassName: "{{ $persistence.storageClass }}"
+  storageClassName: "{{ .storageClass }}"
 {{- end }}
 {{- end }}
 ---
