@@ -2,7 +2,7 @@ apiVersion: v2
 name: audiobookshelf
 description: A Helm chart for Audiobookshelf
 type: application
-version: 0.1.11
+version: 0.1.12
 appVersion: "2.12.3"
 home: https://github.com/landonc/helm-charts
 keywords:
@@ -12,7 +12,3 @@ source:
 repo:
   - https://github.com/landonc/helm-charts.git
 icon: https://www.audiobookshelf.org/Logo.png
-maintainer:
-  - Landon Chelf <landon.chelf@gmail.com>
-details:
-  Some details here
