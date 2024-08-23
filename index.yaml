@@ -3,6 +3,20 @@ entries:
   audiobookshelf:
   - apiVersion: v2
     appVersion: 2.12.3
+    created: "2024-08-23T19:18:19.036554141Z"
+    description: A Helm chart for Audiobookshelf
+    digest: b3cce2678285cea0a36eb7f6135bee39c4d91810bae3f9954c7188d1cbc86e0d
+    home: https://github.com/landonc/helm-charts
+    icon: https://www.audiobookshelf.org/Logo.png
+    keywords:
+    - audiobookshelf
+    name: audiobookshelf
+    type: application
+    urls:
+    - https://github.com/landonc/helm-charts/releases/download/audiobookshelf-0.1.12/audiobookshelf-0.1.12.tgz
+    version: 0.1.12
+  - apiVersion: v2
+    appVersion: 2.12.3
     created: "2024-08-22T19:07:37.017369134Z"
     description: A Helm chart for Audiobookshelf
     digest: ee2d62e12a08e17f396cc9c0647247e9cd10e449a8fb6292f94a8e128499c27a
@@ -169,4 +183,4 @@ entries:
     urls:
     - https://github.com/landonc/chart-repo/releases/download/audiobookshelf-0.1.0/audiobookshelf-0.1.0.tgz
     version: 0.1.0
-generated: "2024-08-22T19:07:37.017419447Z"
+generated: "2024-08-23T19:18:19.036666291Z"
